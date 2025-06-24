@@ -1,6 +1,12 @@
 import { createServer } from 'node:http';
 import { parseUrl } from './util.js';
 
+function requestToString(method, url) {
+  const paramsString = Object.keys(url.params)
+    .map(key => key + '=' + url.params[key]);
+  return `${method} ${url.route} ${paramsString}`;
+}
+
 const homepage = `<!DOCTYPE html>
 
 <html>
@@ -17,11 +23,12 @@ const homepage = `<!DOCTYPE html>
 const port = 8080;
 
 const server = createServer((req, res) => {
-  const url = parseUrl(req.url);
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html');
 
-  console.log(`${req.method} ${url.route} ${url.params}`);
+  const url = parseUrl(req.url);
+
+  console.log(requestToString(req.method, url));
 
   if (url.route == '/') {
     res.end(homepage);
