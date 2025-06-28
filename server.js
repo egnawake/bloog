@@ -2,9 +2,9 @@ import { createServer } from 'node:http';
 import { parseUrl } from './util.js';
 
 function requestToString(method, url) {
-  const paramsString = Object.keys(url.params)
+  const params = Object.keys(url.params)
     .map(key => key + '=' + url.params[key]);
-  return `${method} ${url.route} ${paramsString}`;
+  return `${method} ${url.route} ${params}`;
 }
 
 const homepage = `<!DOCTYPE html>
