@@ -7,7 +7,22 @@ function requestToString(method, url) {
   return `${method} ${url.route} ${params}`;
 }
 
-const homepage = `<!DOCTYPE html>
+async function getArticles() {
+  return [
+    {
+      title: "Article 1",
+      date: Date.now(),
+      content: "This is article number 1."
+    },
+    {
+      title: "Article 2",
+      date: Date.now(),
+      content: "This is article number 2."
+    }
+  ];
+}
+
+const homepage = (params) => `<!DOCTYPE html>
 
 <html>
   <head>
@@ -15,14 +30,14 @@ const homepage = `<!DOCTYPE html>
   </head>
   <body>
     <h1>Bloog</h1>
-    <p>Welcome to best blog!</p>
+    ${params.articles}
   </body>
 </html>
 `;
 
 const port = 8080;
 
-const server = createServer((req, res) => {
+const server = createServer(async (req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html');
 
@@ -31,7 +46,17 @@ const server = createServer((req, res) => {
   console.log(requestToString(req.method, url));
 
   if (url.route == '/') {
-    res.end(homepage);
+    const articles = await getArticles();
+    const articlesMarkup = '<ul>'
+      + articles
+        .map(article => {
+          const date = new Date(article.date).toLocaleString();
+          return `<li>${article.title} (${date})</li>`;
+        })
+        .join('')
+      + '</ul>';
+    const params = { articles: articlesMarkup };
+    res.end(homepage(params));
   } else if (url.route == '/hello') {
     res.end('<h1>Hello!</h1>');
   }
