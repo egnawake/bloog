@@ -1,25 +1,11 @@
 import { createServer } from 'node:http';
 import { parseUrl } from './util.js';
+import { getArticles } from './article.js';
 
 function requestToString(method, url) {
   const params = Object.keys(url.params)
     .map(key => key + '=' + url.params[key]);
   return `${method} ${url.route} ${params}`;
-}
-
-async function getArticles() {
-  return [
-    {
-      title: "Article 1",
-      date: Date.now(),
-      content: "This is article number 1."
-    },
-    {
-      title: "Article 2",
-      date: Date.now(),
-      content: "This is article number 2."
-    }
-  ];
 }
 
 const homepage = (params) => `<!DOCTYPE html>
