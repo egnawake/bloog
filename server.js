@@ -23,6 +23,38 @@ const homepage = (params) => `<!DOCTYPE html>
 
 const port = 8080;
 
+const routes = [
+  {
+    exp: /^\/article\/(\d+)$/,
+    handler: async (req, res, urlParams, queryParams) => {
+      res.end(`<p>Article ID: ${urlParams[0]}`);
+    }
+  },
+  {
+    exp: /^\/$/,
+    handler: async (req, res, urlParams, queryParams) => {
+      const articles = await getArticles();
+      const articlesMarkup = '<ul>'
+        + articles
+          .map(article => {
+            const date = new Date(article.date).toLocaleString();
+            return `<li>${article.title} (${date})</li>`;
+          })
+          .join('')
+        + '</ul>';
+      const params = { articles: articlesMarkup };
+      res.end(homepage(params));
+    }
+  },
+  {
+    exp: /.*/,
+    handler: (req, res, urlParams, queryParams) => {
+      res.statusCode = 404;
+      res.end('<p>Page not found</p>');
+    }
+  }
+];
+
 const server = createServer(async (req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html');
@@ -31,20 +63,13 @@ const server = createServer(async (req, res) => {
 
   console.log(requestToString(req.method, url));
 
-  if (url.route == '/') {
-    const articles = await getArticles();
-    const articlesMarkup = '<ul>'
-      + articles
-        .map(article => {
-          const date = new Date(article.date).toLocaleString();
-          return `<li>${article.title} (${date})</li>`;
-        })
-        .join('')
-      + '</ul>';
-    const params = { articles: articlesMarkup };
-    res.end(homepage(params));
-  } else if (url.route == '/hello') {
-    res.end('<h1>Hello!</h1>');
+  for (const route of routes) {
+    const match = url.route.match(route.exp);
+    if (match !== null) {
+      res.statusCode = 200;
+      route.handler(req, res, match.slice(1), url.params);
+      break;
+    }
   }
 });
 
