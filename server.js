@@ -51,7 +51,7 @@ const routes = [
         + articles
           .map(article => {
             const date = new Date(article.date).toLocaleString();
-            return `<li>${article.title} (${date})</li>`;
+            return `<li><a href="/article/${article.id}">${article.title}</a> (${date})</li>`;
           })
           .join('')
         + '</ul>';
