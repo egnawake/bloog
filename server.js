@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { parseUrl } from './util.js';
-import { getArticles } from './article.js';
+import { getArticles, getArticle } from './article.js';
 
 function requestToString(method, url) {
   const params = Object.keys(url.params)
@@ -8,15 +8,15 @@ function requestToString(method, url) {
   return `${method} ${url.route} ${params}`;
 }
 
-const homepage = (params) => `<!DOCTYPE html>
+const baseMarkup = (params) => `<!DOCTYPE html>
 
 <html>
   <head>
-    <title>Home | Bloog</title>
+    <title>${params.title} | Bloog</title>
   </head>
   <body>
     <h1>Bloog</h1>
-    ${params.articles}
+    ${params.content}
   </body>
 </html>
 `;
@@ -27,7 +27,20 @@ const routes = [
   {
     exp: /^\/article\/(\d+)$/,
     handler: async (req, res, urlParams, queryParams) => {
-      res.end(`<p>Article ID: ${urlParams[0]}`);
+      const article = await getArticle(urlParams[0]);
+      if (!article) {
+        const params = {
+          title: 'Page not found',
+          content: '<p>Article not found</p>'
+        };
+        res.end(baseMarkup(params));
+      } else {
+        const articleMarkup = `<h2>${article.title}</h2>`
+          + `<date>${new Date(article.date).toLocaleString()}</date>`
+          + '<p>' + article.content.trimEnd().replace('\n', '</p><p>') + '</p>';
+        const params = { title: article.title, content: articleMarkup };
+        res.end(baseMarkup(params));
+      }
     }
   },
   {
@@ -42,8 +55,8 @@ const routes = [
           })
           .join('')
         + '</ul>';
-      const params = { articles: articlesMarkup };
-      res.end(homepage(params));
+      const params = { title: 'Home', content: articlesMarkup };
+      res.end(baseMarkup(params));
     }
   },
   {
