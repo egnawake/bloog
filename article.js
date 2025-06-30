@@ -1,3 +1,5 @@
+import fs from 'node:fs/promises';
+
 async function getArticles() {
   return [
     {
@@ -15,4 +17,15 @@ async function getArticles() {
   ];
 }
 
-export { getArticles };
+async function getArticle(id) {
+  try {
+    const data = await fs.readFile(`./data/articles/${id}.json`);
+    const article = JSON.parse(data);
+    return article;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+export { getArticles, getArticle };
