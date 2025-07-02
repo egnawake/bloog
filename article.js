@@ -3,10 +3,34 @@ import path from 'node:path';
 
 const basePath = './data/articles';
 
+async function getNextId() {
+  let data = '';
+  try {
+    data = await fs.readFile(`${basePath}/id`);
+  } catch (err) {
+    throw err;
+  }
+
+  const id = Number.parseInt(data);
+  if (Number.isNaN(id)) {
+    throw new Error("Invalid ID format");
+  }
+  return id;
+}
+
+async function saveId(id) {
+  try {
+    await fs.writeFile(`${basePath}/id`, id.toString());
+  } catch (err) {
+    throw err;
+  }
+}
+
 async function getArticles() {
   let paths = [];
   try {
     paths = await fs.readdir(basePath);
+    paths = paths.filter(p => p.includes('.json'));
   } catch (err) {
     throw err;
   }
@@ -27,4 +51,24 @@ async function getArticle(id) {
   }
 }
 
-export { getArticles, getArticle };
+async function createArticle(title, content) {
+  const id = await getNextId();
+
+  const article = {
+    id,
+    title,
+    date: new Date().toISOString(),
+    content
+  };
+
+  const data = JSON.stringify(article);
+
+  try {
+    await fs.writeFile(`${basePath}/${id}.json`, data);
+    await saveId(id + 1);
+  } catch (err) {
+    throw err;
+  }
+}
+
+export { getArticles, getArticle, createArticle };

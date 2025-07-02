@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { parseUrl } from './util.js';
-import { getArticles, getArticle } from './article.js';
+import { getArticles, getArticle, createArticle } from './article.js';
 
 function requestToString(method, url) {
   const params = Object.keys(url.params)
@@ -47,11 +47,23 @@ const routes = [
         console.error(err);
       }).on('data', chunk => {
         body.push(chunk);
-      }).on('end', () => {
+      }).on('end', async () => {
         body = Buffer.concat(body).toString();
+        const formData = new URLSearchParams(body);
+        let content = '<p>Article created!</p>';
+         + '<a href="/">Home</a>';
+        let params = { title: 'New article', content };
 
-        const content = `<p>${body}</p>`;
-        const params = { title: 'New article', content };
+        try {
+          await createArticle(formData.get('title'),
+            formData.get('content'));
+        } catch (err) {
+          console.log(err);
+          content = '<p>Failed to create article</p>';
+            + '<a href="/">Home</a>';
+          params = { title: 'Error', content };
+        }
+
         res.end(baseMarkup(params));
       });
     }
