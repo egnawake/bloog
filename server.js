@@ -89,7 +89,8 @@ const routes = [
     exp: /.*/,
     handler: (req, res, urlParams, queryParams) => {
       res.statusCode = 404;
-      res.end('<p>Page not found</p>');
+      const params = { title: 'Not found', content: '<p>Page not found</p>' };
+      res.end(baseMarkup(params));
     }
   }
 ];
