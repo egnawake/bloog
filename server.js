@@ -43,6 +43,7 @@ const routes = [
 
       const content = `
 <ul>
+  <a href="/new">New article</a>
   ${articles.map(article => articleMarkup(article)).join('')}
 </ul>`;
 
