@@ -13,6 +13,7 @@ const baseMarkup = (params) => `<!DOCTYPE html>
 <html>
   <head>
     <title>${params.title} | Bloog</title>
+    <meta charset="utf-8" />
   </head>
   <body>
     <h1>Bloog</h1>
@@ -24,6 +25,39 @@ const baseMarkup = (params) => `<!DOCTYPE html>
 const port = 8080;
 
 const routes = [
+  {
+    exp: /^\/new$/,
+    handler: async (req, res, urlParams, queryParams) => {
+      if (req.method === 'GET') {
+        const content = `
+<form action="" method="post">
+  <label for="title">Title</label>
+  <input type="text" name="title" />
+  <label for="content">Content</label>
+  <textarea name="content"></textarea>
+  <input type="submit" />
+</form>
+`;
+        const params = { title: 'New article', content };
+        res.end(baseMarkup(params));
+      } else if (req.method === 'POST') {
+        let body = [];
+
+        req.on('error', err => {
+          console.error(err);
+        }).on('data', chunk => {
+          body.push(chunk);
+        }).on('end', () => {
+          body = Buffer.concat(body).toString();
+
+          const content = `<p>${body}</p>`;
+          const params = { title: 'New article', content };
+          res.end(baseMarkup(params));
+        });
+
+      }
+    }
+  },
   {
     exp: /^\/admin$/,
     handler: async (req, res, urlParams, queryParams) => {
