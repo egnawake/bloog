@@ -1,25 +1,24 @@
 import fs from 'node:fs/promises';
+import path from 'node:path';
+
+const basePath = './data/articles';
 
 async function getArticles() {
-  return [
-    {
-      id: 1,
-      title: "Article 1",
-      date: Date.now(),
-      content: "This is article number 1."
-    },
-    {
-      id: 2,
-      title: "Article 2",
-      date: Date.now(),
-      content: "This is article number 2."
-    }
-  ];
+  let paths = [];
+  try {
+    paths = await fs.readdir(basePath);
+  } catch (err) {
+    throw err;
+  }
+  const ids = paths.map(p => path.basename(p, '.json'));
+  const articles = ids.map(id => getArticle(id));
+  const result = await Promise.all(articles);
+  return result.filter(article => article !== null);
 }
 
 async function getArticle(id) {
   try {
-    const data = await fs.readFile(`./data/articles/${id}.json`);
+    const data = await fs.readFile(`${basePath}/${id}.json`);
     const article = JSON.parse(data);
     return article;
   } catch (err) {
