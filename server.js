@@ -27,9 +27,8 @@ const port = 8080;
 const routes = [
   {
     exp: /^\/new$/,
-    handler: async (req, res, urlParams, queryParams) => {
-      if (req.method === 'GET') {
-        const content = `
+    get: async (req, res, urlParams, queryParams) => {
+      const content = `
 <form action="" method="post">
   <label for="title">Title</label>
   <input type="text" name="title" />
@@ -38,29 +37,28 @@ const routes = [
   <input type="submit" />
 </form>
 `;
+      const params = { title: 'New article', content };
+      res.end(baseMarkup(params));
+    },
+    post: async (req, res, urlParams, queryParams) => {
+      let body = [];
+
+      req.on('error', err => {
+        console.error(err);
+      }).on('data', chunk => {
+        body.push(chunk);
+      }).on('end', () => {
+        body = Buffer.concat(body).toString();
+
+        const content = `<p>${body}</p>`;
         const params = { title: 'New article', content };
         res.end(baseMarkup(params));
-      } else if (req.method === 'POST') {
-        let body = [];
-
-        req.on('error', err => {
-          console.error(err);
-        }).on('data', chunk => {
-          body.push(chunk);
-        }).on('end', () => {
-          body = Buffer.concat(body).toString();
-
-          const content = `<p>${body}</p>`;
-          const params = { title: 'New article', content };
-          res.end(baseMarkup(params));
-        });
-
-      }
+      });
     }
   },
   {
     exp: /^\/admin$/,
-    handler: async (req, res, urlParams, queryParams) => {
+    get: async (req, res, urlParams, queryParams) => {
       const articles = await getArticles();
 
       const articleMarkup = (article) => {
@@ -87,7 +85,7 @@ const routes = [
   },
   {
     exp: /^\/article\/(\d+)$/,
-    handler: async (req, res, urlParams, queryParams) => {
+    get: async (req, res, urlParams, queryParams) => {
       const article = await getArticle(urlParams[0]);
       if (!article) {
         const params = {
@@ -106,7 +104,7 @@ const routes = [
   },
   {
     exp: /^\/$/,
-    handler: async (req, res, urlParams, queryParams) => {
+    get: async (req, res, urlParams, queryParams) => {
       const articles = await getArticles();
       const articlesMarkup = '<ul>'
         + articles
@@ -122,7 +120,7 @@ const routes = [
   },
   {
     exp: /.*/,
-    handler: (req, res, urlParams, queryParams) => {
+    get: (req, res, urlParams, queryParams) => {
       res.statusCode = 404;
       const params = { title: 'Not found', content: '<p>Page not found</p>' };
       res.end(baseMarkup(params));
@@ -142,7 +140,8 @@ const server = createServer(async (req, res) => {
     const match = url.route.match(route.exp);
     if (match !== null) {
       res.statusCode = 200;
-      route.handler(req, res, match.slice(1), url.params);
+      const handler = req.method.toLowerCase();
+      route[handler](req, res, match.slice(1), url.params);
       break;
     }
   }
