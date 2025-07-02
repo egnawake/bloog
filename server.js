@@ -25,6 +25,32 @@ const port = 8080;
 
 const routes = [
   {
+    exp: /^\/admin$/,
+    handler: async (req, res, urlParams, queryParams) => {
+      const articles = await getArticles();
+
+      const articleMarkup = (article) => {
+        const date = new Date(article.date).toLocaleString();
+        return `
+<li>
+  <a href="/article/${article.id}">${article.title} (${date})</a>
+  <a href="/edit/${article.id}">Edit</a>
+  <form action="/delete/${article.id}" method="post">
+    <input type="submit" value="Delete" />
+  </form>
+</li>`;
+      };
+
+      const content = `
+<ul>
+  ${articles.map(article => articleMarkup(article)).join('')}
+</ul>`;
+
+      const params = { title: 'Admin', content };
+      res.end(baseMarkup(params));
+    }
+  },
+  {
     exp: /^\/article\/(\d+)$/,
     handler: async (req, res, urlParams, queryParams) => {
       const article = await getArticle(urlParams[0]);
