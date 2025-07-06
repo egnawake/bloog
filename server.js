@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import fs from 'node:fs/promises';
 import { parseUrl } from './util.js';
 import { getArticles, getArticle, createArticle } from './article.js';
 
@@ -23,6 +24,10 @@ const baseMarkup = (params) => `<!DOCTYPE html>
 `;
 
 const port = 8080;
+
+const mime = {
+  'css': 'text/css'
+};
 
 const routes = [
   {
@@ -128,6 +133,16 @@ const routes = [
         + '</ul>';
       const params = { title: 'Home', content: articlesMarkup };
       res.end(baseMarkup(params));
+    }
+  },
+  {
+    exp: /^\/static\/(.+)\.(.+)$/,
+    get: async (req, res, urlParams, queryParams) => {
+      const [fileName, extension] = urlParams;
+      res.setHeader('content-type', mime[extension]);
+
+      const data = await fs.readFile(`./static/${fileName}.${extension}`);
+      res.end(data);
     }
   },
   {
