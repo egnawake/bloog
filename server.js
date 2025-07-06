@@ -15,9 +15,17 @@ const baseMarkup = (params) => `<!DOCTYPE html>
   <head>
     <title>${params.title} | Bloog</title>
     <meta charset="utf-8" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/static/main.css" />
   </head>
   <body>
-    <h1>Bloog</h1>
+    <header>
+      <h1>Bloog</h1>
+    </header>
     ${params.content}
   </body>
 </html>
