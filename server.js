@@ -121,11 +121,12 @@ const routes = [
         };
         res.end(baseMarkup(params));
       } else {
-        const articleMarkup = `<h2>${article.title}</h2>`
-          + `<date>${new Date(article.date).toLocaleString()}</date>`
-          + '<p>' + article.content.trimEnd().replace('\n', '</p><p>') + '</p>';
-        const params = { title: article.title, content: articleMarkup };
-        res.end(baseMarkup(params));
+        const locals = { title: article.title };
+        locals.article = {
+          ...article,
+          date: new Date(article.date).toLocaleString()
+        };
+        res.end(pug.renderFile('templates/article.pug', locals));
       }
     }
   },
