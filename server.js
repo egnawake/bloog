@@ -22,29 +22,6 @@ function render(template, options = {}) {
   return pug.renderFile(templatePath, options);
 }
 
-const baseMarkup = (params) => `<!DOCTYPE html>
-
-<html>
-  <head>
-    <title>${params.title} | Bloog</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="/static/main.css" />
-  </head>
-  <body>
-    <header>
-      <h1>Bloog</h1>
-    </header>
-    ${params.content}
-  </body>
-</html>
-`;
-
 const port = 8080;
 
 const mime = {
