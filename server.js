@@ -89,11 +89,8 @@ const routes = [
     get: async (req, res, urlParams, queryParams) => {
       const article = await getArticle(urlParams[0]);
       if (!article) {
-        const params = {
-          title: 'Page not found',
-          content: '<p>Article not found</p>'
-        };
-        res.end(baseMarkup(params));
+        const locals = { title: 'Page not found' };
+        res.end(render('404', locals));
       } else {
         const locals = { title: article.title };
         locals.article = {
@@ -134,8 +131,8 @@ const routes = [
     exp: /.*/,
     get: (req, res, urlParams, queryParams) => {
       res.statusCode = 404;
-      const params = { title: 'Not found', content: '<p>Page not found</p>' };
-      res.end(baseMarkup(params));
+      const locals = { title: 'Page not found' };
+      res.end(render('404', locals));
     }
   }
 ];
