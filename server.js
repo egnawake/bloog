@@ -1,13 +1,25 @@
 import { createServer } from 'node:http';
+import path from 'node:path';
 import fs from 'node:fs/promises';
 import pug from 'pug';
 import { parseUrl } from './util.js';
 import { getArticles, getArticle, createArticle } from './article.js';
 
+const TEMPLATE_DIR = 'templates';
+
 function requestToString(method, url) {
   const params = Object.keys(url.params)
     .map(key => key + '=' + url.params[key]);
   return `${method} ${url.route} ${params}`;
+}
+
+function render(template, options = {}) {
+  options = {
+    ...options,
+    basedir: TEMPLATE_DIR
+  };
+  const templatePath = path.join(TEMPLATE_DIR, template) + '.pug';
+  return pug.renderFile(templatePath, options);
 }
 
 const baseMarkup = (params) => `<!DOCTYPE html>
@@ -98,7 +110,7 @@ const routes = [
           deleteRoute: `/delete/${a.id}`
         };
       });
-      res.end(pug.renderFile('templates/admin.pug', locals));
+      res.end(render('admin', locals));
     }
   },
   {
@@ -117,7 +129,7 @@ const routes = [
           ...article,
           formattedDate: new Date(article.date).toLocaleString()
         };
-        res.end(pug.renderFile('templates/article.pug', locals));
+        res.end(render('article', locals));
       }
     }
   },
@@ -134,7 +146,7 @@ const routes = [
           route: `/article/${a.id}`
         };
       });
-      res.end(pug.renderFile('templates/home.pug', locals));
+      res.end(render('home', locals));
     }
   },
   {
