@@ -55,17 +55,8 @@ const routes = [
   {
     exp: /^\/new$/,
     get: async (req, res, urlParams, queryParams) => {
-      const content = `
-<form action="" method="post">
-  <label for="title">Title</label>
-  <input type="text" name="title" />
-  <label for="content">Content</label>
-  <textarea name="content"></textarea>
-  <input type="submit" />
-</form>
-`;
-      const params = { title: 'New article', content };
-      res.end(baseMarkup(params));
+      const locals = { title: 'New article', formUrl: '/new' };
+      res.end(render('article/new', locals));
     },
     post: async (req, res, urlParams, queryParams) => {
       let body = [];

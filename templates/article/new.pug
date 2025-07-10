@@ -1,0 +1,9 @@
+extends /base.pug
+
+block content
+  form(action=formUrl method='post')
+    label(for='title') Title
+    input(type='text' name='title')
+    label(for='content') Content
+    textarea(name='content')
+    input(type='submit')
