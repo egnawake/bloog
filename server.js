@@ -1,5 +1,6 @@
 import { createServer } from 'node:http';
 import fs from 'node:fs/promises';
+import pug from 'pug';
 import { parseUrl } from './util.js';
 import { getArticles, getArticle, createArticle } from './article.js';
 
@@ -132,16 +133,16 @@ const routes = [
     exp: /^\/$/,
     get: async (req, res, urlParams, queryParams) => {
       const articles = await getArticles();
-      const articlesMarkup = '<ul>'
-        + articles
-          .map(article => {
-            const date = new Date(article.date).toLocaleString();
-            return `<li><a href="/article/${article.id}">${article.title}</a> (${date})</li>`;
-          })
-          .join('')
-        + '</ul>';
-      const params = { title: 'Home', content: articlesMarkup };
-      res.end(baseMarkup(params));
+
+      const locals = { title: 'Home' };
+      locals.articles = articles.map(a => {
+        return {
+          ...a,
+          date: new Date(a.date).toLocaleString(),
+          route: `/article/${a.id}`
+        };
+      });
+      res.end(pug.renderFile('templates/home.pug', locals));
     }
   },
   {

@@ -1,0 +1,8 @@
+extends base.pug
+
+block content
+  ul
+    each article in articles
+      li
+        a(href=article.route) #{article.title}
+        | (#{article.date})
