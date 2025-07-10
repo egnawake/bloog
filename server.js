@@ -44,22 +44,25 @@ const routes = [
         body.push(chunk);
       }).on('end', async () => {
         body = Buffer.concat(body).toString();
+
         const formData = new URLSearchParams(body);
-        let content = '<p>Article created!</p>';
-         + '<a href="/">Home</a>';
-        let params = { title: 'New article', content };
+
+        let template = 'article/created';
+        let locals = { title: 'New article' };
 
         try {
           await createArticle(formData.get('title'),
             formData.get('content'));
         } catch (err) {
           console.log(err);
-          content = '<p>Failed to create article</p>';
-            + '<a href="/">Home</a>';
-          params = { title: 'Error', content };
+          template = 'error';
+          locals = {
+            title: 'Error',
+            errorMessage: err.toString()
+          };
         }
 
-        res.end(baseMarkup(params));
+        res.end(render(template, locals));
       });
     }
   },
