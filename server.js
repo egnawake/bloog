@@ -92,7 +92,7 @@ const routes = [
       locals.articles = articles.map(a => {
         return {
           ...a,
-          date: new Date(a.date).toLocaleString(),
+          formattedDate: new Date(a.date).toLocaleString(),
           route: `/article/${a.id}`,
           editRoute: `/edit/${a.id}`,
           deleteRoute: `/delete/${a.id}`
@@ -115,7 +115,7 @@ const routes = [
         const locals = { title: article.title };
         locals.article = {
           ...article,
-          date: new Date(article.date).toLocaleString()
+          formattedDate: new Date(article.date).toLocaleString()
         };
         res.end(pug.renderFile('templates/article.pug', locals));
       }
@@ -130,7 +130,7 @@ const routes = [
       locals.articles = articles.map(a => {
         return {
           ...a,
-          date: new Date(a.date).toLocaleString(),
+          formattedDate: new Date(a.date).toLocaleString(),
           route: `/article/${a.id}`
         };
       });

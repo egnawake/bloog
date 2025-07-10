@@ -4,5 +4,5 @@ block content
   ul
     each article in articles
       li
-        a(href=article.route) #{article.title}
-        | (#{article.date})
+        a(href=article.route)= article.title
+        time(datetime=article.date)= article.formattedDate
