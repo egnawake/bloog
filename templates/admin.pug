@@ -1,0 +1,12 @@
+extends base.pug
+
+block content
+  a(href=newRoute) New article
+  ul
+    each article in articles
+      li
+        a(href=article.route)= article.title
+        date= article.date
+        a(href=article.editRoute) Edit
+        form(action=article.deleteRoute method='post')
+          input(type='submit' value='Delete')

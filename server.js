@@ -88,26 +88,17 @@ const routes = [
     get: async (req, res, urlParams, queryParams) => {
       const articles = await getArticles();
 
-      const articleMarkup = (article) => {
-        const date = new Date(article.date).toLocaleString();
-        return `
-<li>
-  <a href="/article/${article.id}">${article.title} (${date})</a>
-  <a href="/edit/${article.id}">Edit</a>
-  <form action="/delete/${article.id}" method="post">
-    <input type="submit" value="Delete" />
-  </form>
-</li>`;
-      };
-
-      const content = `
-<ul>
-  <a href="/new">New article</a>
-  ${articles.map(article => articleMarkup(article)).join('')}
-</ul>`;
-
-      const params = { title: 'Admin', content };
-      res.end(baseMarkup(params));
+      const locals = { title: 'Admin', newRoute: '/new' };
+      locals.articles = articles.map(a => {
+        return {
+          ...a,
+          date: new Date(a.date).toLocaleString(),
+          route: `/article/${a.id}`,
+          editRoute: `/edit/${a.id}`,
+          deleteRoute: `/delete/${a.id}`
+        };
+      });
+      res.end(pug.renderFile('templates/admin.pug', locals));
     }
   },
   {
