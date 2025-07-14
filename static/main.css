@@ -7,14 +7,21 @@ body {
   margin: 0;
 }
 
-header {
+h1 {
+  font-weight: normal;
+  font-size: 1.8rem;
+}
+
+header.page-header {
   background: linear-gradient(25deg, #1e1842, #62134e);
 }
 
-header > h1 {
+header.page-header > .logo {
+  display: block;
   margin: 0;
   padding: 0.5rem 0.8rem;
   font-size: 2rem;
+  font-weight: bold;
   color: transparent;
   background: text linear-gradient(#9984fb, #ff51e5);
 }
