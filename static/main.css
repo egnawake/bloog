@@ -18,3 +18,34 @@ header > h1 {
   color: transparent;
   background: text linear-gradient(#9984fb, #ff51e5);
 }
+
+ul.article-list {
+  list-style-type: none;
+  padding: 0;
+  margin-block: 0;
+}
+
+ul.article-list > li {
+  border-block-end: 1px solid silver;
+}
+
+ul.article-list > li:last-child {
+  border-block-end: none;
+}
+
+.article-item {
+  padding-block: 1.5rem;
+  padding-inline: 0.8rem;
+}
+
+.article-item > a {
+  display: block;
+  font-size: large;
+  padding-block: 0.35rem;
+}
+
+.article-item > time {
+  display: block;
+  font-size: small;
+  color: gray;
+}

@@ -1,8 +1,8 @@
 extends base.pug
 
 block content
-  ul
+  ul.article-list
     each article in articles
-      li
+      li.article-item
         a(href=article.route)= article.title
         time(datetime=article.date)= article.formattedDate
