@@ -49,3 +49,22 @@ ul.article-list > li:last-child {
   font-size: small;
   color: gray;
 }
+
+.article {
+  padding-inline: 0.8rem;
+}
+
+.article > header {
+  margin-block-start: 1.5rem;
+  margin-block-end: 2rem;
+}
+
+.article > header > .title {
+  margin-block-end: 0.8rem;
+}
+
+.article > header > time {
+  display: block;
+  color: gray;
+  font-size: small;
+}
