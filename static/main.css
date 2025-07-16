@@ -45,13 +45,40 @@ ul.article-list > li:last-child {
   padding-inline: 0.8rem;
 }
 
-.article-item > a {
+.article-item.admin {
+  display: block flex;
+  align-items: center;
+}
+
+.article-item.admin .article-info {
+  flex: 1 0 min-content;
+}
+
+.article-item.admin .article-action {
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0.2rem solid pink;
+  border-radius: 50%;
+  text-decoration: none;
+  color: purple;
+  margin: 0 0.2rem;
+}
+
+.article-item.admin .article-action .material-symbols-outlined {
+  font-size: 1.5rem;
+}
+
+.article-title {
   display: block;
   font-size: large;
   padding-block: 0.35rem;
 }
 
-.article-item > time {
+.article-item .article-date {
   display: block;
   font-size: small;
   color: gray;

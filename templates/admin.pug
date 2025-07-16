@@ -2,11 +2,13 @@ extends base.pug
 
 block content
   a(href=newRoute) New article
-  ul
+  ul.article-list
     each article in articles
-      li
-        a(href=article.route)= article.title
-        time(datetime=article.date)= article.formattedDate
-        a(href=article.editRoute) Edit
-        form(action=article.deleteRoute method='post')
-          input(type='submit' value='Delete')
+      li.article-item.admin
+        div.article-info
+          a.article-title(href=article.route)= article.title
+          time.article-date(datetime=article.date)= article.formattedDate
+        a.article-action(href=article.editRoute title='Edit')
+          span.material-symbols-outlined &#xe3c9;
+        a.article-action(href=article.deleteRoute title='Delete')
+          span.material-symbols-outlined &#xe872;
