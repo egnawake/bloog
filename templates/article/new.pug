@@ -2,8 +2,14 @@ extends /base.pug
 
 block content
   form(action=formUrl method='post')
-    label(for='title') Title
-    input(type='text' name='title')
-    label(for='content') Content
-    textarea(name='content')
+    div.field
+      label(for='title') Title
+      input(type='text' name='title')
+    div.field
+      label(for='content') Content
+      textarea(
+        name='content'
+        rows='17'
+        cols='50'
+      )
     input(type='submit')
