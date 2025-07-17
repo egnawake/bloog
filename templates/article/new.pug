@@ -4,11 +4,16 @@ block content
   form(action=formUrl method='post')
     div.field
       label(for='title') Title
-      input(type='text' name='title')
+      input(
+        type='text'
+        name='title'
+        id='title'
+      )
     div.field
       label(for='content') Content
       textarea(
         name='content'
+        id='content'
         rows='17'
         cols='50'
       )
