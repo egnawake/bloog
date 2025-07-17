@@ -3,7 +3,12 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import pug from 'pug';
 import { parseUrl } from './util.js';
-import { getArticles, getArticle, createArticle } from './article.js';
+import {
+  getArticles,
+  getArticle,
+  createArticle,
+  updateArticle
+} from './article.js';
 
 const TEMPLATE_DIR = 'templates';
 
@@ -64,6 +69,61 @@ const routes = [
 
         res.end(render(template, locals));
       });
+    }
+  },
+  {
+    exp: /^\/edit\/(\d+)/,
+    get: async (req, res, urlParams, queryParams) => {
+      const article = await getArticle(urlParams[0]);
+      if (article === null) {
+        const locals = { title: 'Page not found' };
+        res.end(render('404', locals));
+      } else {
+        const locals = { title: 'Edit' };
+        locals.article = article;
+        locals.editEndpoint = `/edit/${urlParams[0]}`;
+        res.end(render('article/edit', locals));
+      }
+    },
+    post: async (req, res, urlParams, queryParams) => {
+      const article = await getArticle(urlParams[0]);
+      if (article === null) {
+        const locals = { title: 'Page not found' };
+        res.end(render('404', locals));
+      } else {
+        let body = [];
+
+        req.on('error', err => {
+          console.error(err);
+        }).on('data', chunk => {
+          body.push(chunk);
+        }).on('end', async () => {
+          body = Buffer.concat(body).toString();
+
+          const formData = new URLSearchParams(body);
+
+          let template = 'article/created';
+          let locals = { title: 'New article' };
+
+          try {
+            await updateArticle(
+              Number(urlParams[0]),
+              formData.get('title'),
+              formData.get('date'),
+              formData.get('content')
+            );
+          } catch (err) {
+            console.log(err);
+            template = 'error';
+            locals = {
+              title: 'Error',
+              errorMessage: err.toString()
+            };
+          }
+
+          res.end(render(template, locals));
+        });
+      }
     }
   },
   {

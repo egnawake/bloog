@@ -132,3 +132,31 @@ ul.article-list > li:last-child {
   position: relative;
   inset-block-start: 0.05rem;
 }
+
+form {
+  padding-inline: 0.8rem;
+}
+
+.field {
+  margin-block: 1rem;
+}
+
+.field label {
+  display: block;
+  margin-block: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.field input, .field textarea {
+  padding: 0.4rem;
+  border-radius: 0.5rem;
+  border: 1px solid silver;
+  font-family: 'Sora', sans-serif;
+  font-size: inherit;
+}
+
+.field textarea {
+  box-sizing: border-box;
+  font-size: 1rem;
+  max-width: 100%;
+}

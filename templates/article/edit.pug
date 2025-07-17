@@ -1,0 +1,30 @@
+extends /base.pug
+
+block content
+  form(action=editEndpoint method='post')
+    div.field
+      label(for='title') Title
+      input(
+        type='text'
+        name='title'
+        id='title'
+        value=article.title
+        maxlength='100'
+      )
+    div.field
+      label(for='date') Publication date
+      input(
+        type='datetime-local'
+        name='date'
+        id='date'
+        value=article.date
+      )
+    div.field
+      label(for='content') Content
+      textarea(
+        name='content'
+        id='content'
+        rows='17'
+        cols='50'
+      )= article.content
+    button(type='submit') Submit

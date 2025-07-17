@@ -51,13 +51,11 @@ async function getArticle(id) {
   }
 }
 
-async function createArticle(title, content) {
-  const id = await getNextId();
-
+async function writeArticle(id, title, date, content) {
   const article = {
     id,
     title,
-    date: new Date().toISOString(),
+    date,
     content
   };
 
@@ -71,4 +69,29 @@ async function createArticle(title, content) {
   }
 }
 
-export { getArticles, getArticle, createArticle };
+async function createArticle(title, content) {
+  const id = await getNextId();
+  const date = new Date().toISOString();
+
+  try {
+    await writeArticle(id, title, date, content);
+    await saveId(id + 1);
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function updateArticle(id, title, date, content) {
+  try {
+    await writeArticle(id, title, date, content);
+  } catch (err) {
+    throw err;
+  }
+}
+
+export {
+  getArticles,
+  getArticle,
+  createArticle,
+  updateArticle
+};
