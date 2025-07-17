@@ -1,7 +1,9 @@
 extends base.pug
 
 block content
-  a(href=newRoute) New article
+  a.new-article(href=newRoute)
+    span.material-symbols-outlined.icon &#xe145;
+    span.label New article
   ul.article-list
     each article in articles
       li.article-item.admin

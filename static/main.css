@@ -12,6 +12,14 @@ h1 {
   font-size: 1.8rem;
 }
 
+a {
+  color: purple;
+}
+
+.material-symbols-outlined {
+  font-size: inherit;
+}
+
 header.page-header {
   background: linear-gradient(25deg, #1e1842, #62134e);
 }
@@ -101,4 +109,26 @@ ul.article-list > li:last-child {
   display: block;
   color: gray;
   font-size: small;
+}
+
+.new-article {
+  display: inline flex;
+  align-items: center;
+  text-decoration: none;
+  border: 0.2rem solid pink;
+  border-radius: 2rem;
+  margin-top: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding: 0.2rem 0.5rem;
+}
+
+.new-article .icon {
+  font-size: 1.8rem;
+}
+
+.new-article .label {
+  margin: 0 0.5rem;
+  position: relative;
+  inset-block-start: 0.05rem;
 }
