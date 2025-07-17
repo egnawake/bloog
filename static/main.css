@@ -22,16 +22,24 @@ a {
 
 header.page-header {
   background: linear-gradient(25deg, #1e1842, #62134e);
+  display: flex;
+  align-items: center;
 }
 
 header.page-header > .logo {
   display: block;
-  margin: 0;
+  margin-inline-end: auto;
   padding: 0.5rem 0.8rem;
   font-size: 2rem;
   font-weight: bold;
   color: transparent;
   background: text linear-gradient(#9984fb, #ff51e5);
+}
+
+header.page-header .nav-item {
+  margin-inline: 1rem;
+  color: pink;
+  text-decoration: none;
 }
 
 ul.article-list {
