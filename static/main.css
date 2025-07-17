@@ -160,3 +160,13 @@ form {
   font-size: 1rem;
   max-width: 100%;
 }
+
+button {
+  border: 0.2rem solid pink;
+  border-radius: 2rem;
+  padding: 0.5rem 2rem;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+  color: purple;
+}
