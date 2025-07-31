@@ -2,7 +2,7 @@ import { createServer } from 'node:http';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import pug from 'pug';
-import { parseUrl } from './util.js';
+import { parseUrl, getBody } from './util.js';
 import {
   getArticles,
   getArticle,
@@ -42,34 +42,26 @@ const routes = [
       res.end(render('article/new', locals));
     },
     post: async (req, res, urlParams, queryParams) => {
-      let body = [];
+      const body = await getBody(req);
 
-      req.on('error', err => {
-        console.error(err);
-      }).on('data', chunk => {
-        body.push(chunk);
-      }).on('end', async () => {
-        body = Buffer.concat(body).toString();
+      const formData = new URLSearchParams(body);
 
-        const formData = new URLSearchParams(body);
+      let template = 'article/created';
+      let locals = { title: 'New article' };
 
-        let template = 'article/created';
-        let locals = { title: 'New article' };
+      try {
+        await createArticle(formData.get('title'),
+          formData.get('content'));
+      } catch (err) {
+        console.log(err);
+        template = 'error';
+        locals = {
+          title: 'Error',
+          errorMessage: err.toString()
+        };
+      }
 
-        try {
-          await createArticle(formData.get('title'),
-            formData.get('content'));
-        } catch (err) {
-          console.log(err);
-          template = 'error';
-          locals = {
-            title: 'Error',
-            errorMessage: err.toString()
-          };
-        }
-
-        res.end(render(template, locals));
-      });
+      res.end(render(template, locals));
     }
   },
   {
@@ -92,38 +84,30 @@ const routes = [
         const locals = { title: 'Page not found' };
         res.end(render('404', locals));
       } else {
-        let body = [];
+        const body = await getBody(req);
 
-        req.on('error', err => {
-          console.error(err);
-        }).on('data', chunk => {
-          body.push(chunk);
-        }).on('end', async () => {
-          body = Buffer.concat(body).toString();
+        const formData = new URLSearchParams(body);
 
-          const formData = new URLSearchParams(body);
+        let template = 'article/created';
+        let locals = { title: 'New article' };
 
-          let template = 'article/created';
-          let locals = { title: 'New article' };
+        try {
+          await updateArticle(
+            Number(urlParams[0]),
+            formData.get('title'),
+            formData.get('date'),
+            formData.get('content')
+          );
+        } catch (err) {
+          console.log(err);
+          template = 'error';
+          locals = {
+            title: 'Error',
+            errorMessage: err.toString()
+          };
+        }
 
-          try {
-            await updateArticle(
-              Number(urlParams[0]),
-              formData.get('title'),
-              formData.get('date'),
-              formData.get('content')
-            );
-          } catch (err) {
-            console.log(err);
-            template = 'error';
-            locals = {
-              title: 'Error',
-              errorMessage: err.toString()
-            };
-          }
-
-          res.end(render(template, locals));
-        });
+        res.end(render(template, locals));
       }
     }
   },

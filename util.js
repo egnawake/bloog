@@ -13,4 +13,19 @@ function parseUrl(url) {
   return { route, params };
 }
 
-export { parseUrl };
+async function getBody(req) {
+  return new Promise((resolve, reject) => {
+    let body = [];
+
+    req.on('error', err => {
+      reject(err);
+    }).on('data', chunk => {
+      body.push(chunk);
+    }).on('end', async () => {
+      body = Buffer.concat(body).toString();
+      resolve(body);
+    });
+  });
+}
+
+export { parseUrl, getBody };
