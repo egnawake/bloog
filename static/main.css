@@ -161,12 +161,12 @@ form {
   border: 1px solid silver;
   font-family: 'Sora', sans-serif;
   font-size: inherit;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .field textarea {
-  box-sizing: border-box;
   font-size: 1rem;
-  max-width: 100%;
 }
 
 button {
