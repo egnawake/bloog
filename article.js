@@ -70,9 +70,8 @@ async function writeArticle(id, title, date, content) {
   }
 }
 
-async function createArticle(title, content) {
+async function createArticle(title, date, content) {
   const id = await getNextId();
-  const date = new Date().toISOString();
 
   try {
     await writeArticle(id, title, date, content);

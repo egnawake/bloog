@@ -50,7 +50,9 @@ const routes = [
       let locals = { title: 'New article' };
 
       try {
-        await createArticle(formData.get('title'),
+        await createArticle(
+          formData.get('title'),
+          formData.get('date'),
           formData.get('content'));
       } catch (err) {
         console.log(err);
