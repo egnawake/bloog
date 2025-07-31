@@ -12,6 +12,7 @@ import {
 } from './article.js';
 
 const TEMPLATE_DIR = 'templates';
+const DEFAULT_LOCALE = 'en-US';
 
 function requestToString(method, url) {
   const params = Object.keys(url.params)
@@ -26,6 +27,10 @@ function render(template, options = {}) {
   };
   const templatePath = path.join(TEMPLATE_DIR, template) + '.pug';
   return pug.renderFile(templatePath, options);
+}
+
+function getLocale(req) {
+  return DEFAULT_LOCALE;
 }
 
 const port = 8080;
@@ -149,9 +154,11 @@ const routes = [
 
       const locals = { title: 'Admin', newRoute: '/new' };
       locals.articles = articles.map(a => {
+        const formattedDate = new Date(a.date)
+          .toLocaleDateString(getLocale(req));
         return {
           ...a,
-          formattedDate: new Date(a.date).toLocaleString(),
+          formattedDate,
           route: `/article/${a.id}`,
           editRoute: `/edit/${a.id}`,
           deleteRoute: `/delete/${a.id}`
@@ -169,9 +176,11 @@ const routes = [
         res.end(render('404', locals));
       } else {
         const locals = { title: article.title };
+        const formattedDate = new Date(article.date)
+          .toLocaleDateString(getLocale(req));
         locals.article = {
           ...article,
-          formattedDate: new Date(article.date).toLocaleString()
+          formattedDate
         };
         res.end(render('article', locals));
       }
@@ -184,9 +193,11 @@ const routes = [
 
       const locals = { title: 'Home' };
       locals.articles = articles.map(a => {
+        const formattedDate = new Date(a.date)
+          .toLocaleDateString(getLocale(req));
         return {
           ...a,
-          formattedDate: new Date(a.date).toLocaleString(),
+          formattedDate,
           route: `/article/${a.id}`
         };
       });
