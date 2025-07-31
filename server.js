@@ -7,7 +7,8 @@ import {
   getArticles,
   getArticle,
   createArticle,
-  updateArticle
+  updateArticle,
+  deleteArticle
 } from './article.js';
 
 const TEMPLATE_DIR = 'templates';
@@ -124,6 +125,35 @@ const routes = [
           res.end(render(template, locals));
         });
       }
+    }
+  },
+  {
+    exp: /^\/delete\/(\d+)/,
+    get: async (req, res, urlParams, queryParams) => {
+      const article = await getArticle(urlParams[0]);
+      if (!article) {
+        const locals = { title: 'Page not found' };
+        res.end(render('404', locals));
+      } else {
+        const locals = {
+          title: 'Delete',
+          articleTitle: article.title,
+          deleteEndpoint: `/delete/${article.id}`
+        };
+        res.end(render('article/delete', locals));
+      }
+    },
+    post: async (req, res, urlParams, queryParams) => {
+      let template = 'article/created';
+      let locals = { title: 'Deleted' };
+      try {
+        await deleteArticle(urlParams[0]);
+      } catch (err) {
+        console.log(err);
+        template = 'error';
+        locals.errorMessage = err.message;
+      }
+      res.end(render(template, locals));
     }
   },
   {

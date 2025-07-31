@@ -1,0 +1,11 @@
+extends /base.pug
+
+block content
+  form(action=deleteEndpoint method="post")
+    fieldset
+      legend
+        | Are you sure you want to delete
+        |
+        strong= articleTitle
+        | ?
+      button(type='submit') Yes

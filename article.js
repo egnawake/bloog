@@ -30,7 +30,8 @@ async function getArticles() {
   let paths = [];
   try {
     paths = await fs.readdir(basePath);
-    paths = paths.filter(p => p.includes('.json'));
+    paths = paths.filter(p => p[0] !== '_')
+      .filter(p => p.includes('.json'));
   } catch (err) {
     throw err;
   }
@@ -89,9 +90,18 @@ async function updateArticle(id, title, date, content) {
   }
 }
 
+async function deleteArticle(id) {
+  try {
+    await fs.rename(`${basePath}/${id}.json`, `${basePath}/_${id}.json`);
+  } catch (err) {
+    throw err;
+  }
+}
+
 export {
   getArticles,
   getArticle,
   createArticle,
-  updateArticle
+  updateArticle,
+  deleteArticle
 };
